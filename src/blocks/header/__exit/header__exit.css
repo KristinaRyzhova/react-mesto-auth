@@ -1,0 +1,23 @@
+.header__exit {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  color: #A9A9A9;
+  text-decoration: none;
+  cursor: pointer;
+  /* display: none; */
+}
+/* 
+@media screen and (min-width: 520px) {
+  .header__exit {
+    display: block;
+  }
+} */
+
+.header__exit:hover {
+  opacity: 0.6;
+}

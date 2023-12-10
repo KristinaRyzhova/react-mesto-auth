@@ -11,6 +11,12 @@ import EditAvatarPopup from './EditAvatarPopup.jsx';
 import AddPlacePopup from './AddPlacePopup.jsx';
 import DeleteCardPopup from './DeleteCardPopup.jsx';
 
+import { Routes, Route } from 'react-router-dom';
+import Login from './Login.jsx';
+import Register from './Register.jsx';
+import InfoTooltip from './InfoTooltip.jsx';
+import ProtectedRoute from './ProtectedRoute.jsx';
+
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -21,6 +27,10 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [deletedCard, setDeletedCard] = useState(null);
   const [cards, setCards] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isInfoToolTip, setIsInfoToolTip] = useState(false);
+
 
   useEffect(() => {
     api.getAllInfo()
@@ -59,6 +69,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsDeleteCardPopupOpen(false);
     setSelectedCard(null);
+    setIsInfoToolTip(false)
   };
 
   const isOpenPopup = 
@@ -66,7 +77,8 @@ function App() {
     isEditProfilePopupOpen || 
     isAddPlacePopupOpen || 
     isDeleteCardPopupOpen || 
-    selectedCard;
+    selectedCard || 
+    isInfoToolTip;
 
   const closePopupByEscape = useCallback(function (evt) {
     if (evt.key === "Escape") {
@@ -156,16 +168,23 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
-        <Main
-          onEditAvatar={handleEditAvatarClick}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onDeletePopup={handleDeleteCardClick}
-          onDeletedCard={setDeletedCard}
-          cards={cards}
-        />
+        <Routes>
+
+        <Route path='/' element={<ProtectedRoute
+            element={ Main }
+            onEditAvatar={handleEditAvatarClick}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onCardClick={handleCardClick}
+            onCardLike={handleCardLike}
+            onDeletePopup={handleDeleteCardClick}
+            onDeletedCard={setDeletedCard}
+            cards={cards}
+            loggedIn={ isLoggedIn }
+            />} />
+          <Route path="/sign-up" element={<Register />}/>
+          <Route path="/sign-in" element={<Login />}/>
+        </Routes>
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
@@ -198,6 +217,12 @@ function App() {
         />
         <ImagePopup
           card={selectedCard}
+          onClose={closeAllPopups}
+          onClickOverlay={closePopupByOverley}
+        />
+        <InfoTooltip
+          isSuccess={isSuccess}
+          //isOpen={isInfoToolTip}
           onClose={closeAllPopups}
           onClickOverlay={closePopupByOverley}
         />

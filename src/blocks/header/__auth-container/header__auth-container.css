@@ -1,0 +1,16 @@
+.header__auth-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  align-items: end;
+}
+
+@media screen and (min-width: 520px) {
+  .header__auth-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 24px;
+  }
+}

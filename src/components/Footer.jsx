@@ -1,9 +1,11 @@
 function Footer() {
+  const today = new Date();
+  const year = today.getFullYear();
   return (
     <>
       <footer className="footer">
         <p className="footer__copyright" lang="en">
-          © 2023 Mesto Russia
+          © {year} Mesto Russia
         </p>
       </footer>
     </>

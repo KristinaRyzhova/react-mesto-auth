@@ -11,11 +11,12 @@ import EditAvatarPopup from './EditAvatarPopup.jsx';
 import AddPlacePopup from './AddPlacePopup.jsx';
 import DeleteCardPopup from './DeleteCardPopup.jsx';
 
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Login from './Login.jsx';
 import Register from './Register.jsx';
 import InfoTooltip from './InfoTooltip.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
+import * as auth from '../utils/auth.js'
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -27,21 +28,81 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [deletedCard, setDeletedCard] = useState(null);
   const [cards, setCards] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  const [loggedIn, setLoggedIn] = React.useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isInfoToolTip, setIsInfoToolTip] = useState(false);
+  const [userEmail, setUserEmail] = React.useState('');
+  const navigate = useNavigate();
 
+  React.useEffect(() => {
+    handleTokenCheck();
+  }, []);
 
-  useEffect(() => {
-    api.getAllInfo()
-      .then(([user, cards]) => {
-        setCurrentUser(user);
-        setCards(cards)
+  const handleTokenCheck = () => {
+    if (localStorage.getItem('jwt')) {
+      const jwt = localStorage.getItem('jwt');
+      auth.checkToken(jwt).then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          navigate('/', { replace: true });
+          setUserEmail(res.data.email);
+        }
+        else {
+          setLoggedIn(false);
+          navigate('/sign-in', { replace: true })
+        }
+      });
+    }
+  };
+
+  function handleRegister(email, password) {
+    auth.register(email, password)
+      .then((res) => {
+        if (res) {
+          navigate('/sign-in', {replace: true});
+          setIsSuccess(true);
+          setIsInfoToolTip(true);
+        }
       })
       .catch((err) => {
         console.log(err);
+        setIsSuccess(false);
+        setIsInfoToolTip(true);
       })
-  }, []);
+  };
+
+  function handleLogin(email, password) {
+    auth.login(email, password)
+      .then((data) => {
+        setLoggedIn(true);
+        setUserEmail(email);
+        navigate('/', {replace: true});
+        localStorage.setItem('jwt', data.token);
+      })
+      .catch(err => {
+        console.log(err);
+        setIsSuccess(false);
+        setIsInfoToolTip(true);
+      })
+  };
+
+  function handleExit() {
+    localStorage.removeItem('jwt');
+    setLoggedIn(false);
+  };
+
+  useEffect(() => {
+    if (loggedIn) {
+      api.getAllInfo()
+        .then(([user, cards]) => {
+          setCurrentUser(user);
+          setCards(cards)
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+  }}, [loggedIn]);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -167,10 +228,9 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header email={userEmail}  onClick={handleExit} />
         <Routes>
-
-        <Route path='/' element={<ProtectedRoute
+          <Route path='/' element={<ProtectedRoute
             element={ Main }
             onEditAvatar={handleEditAvatarClick}
             onEditProfile={handleEditProfileClick}
@@ -180,10 +240,10 @@ function App() {
             onDeletePopup={handleDeleteCardClick}
             onDeletedCard={setDeletedCard}
             cards={cards}
-            loggedIn={ isLoggedIn }
+            loggedIn={loggedIn}
             />} />
-          <Route path="/sign-up" element={<Register />}/>
-          <Route path="/sign-in" element={<Login />}/>
+          <Route path="/sign-up" element={<Register onRegister={handleRegister}/>}/>
+          <Route path="/sign-in" loggedIn={loggedIn} element={<Login onLogin={handleLogin}/>}/>
         </Routes>
         <Footer />
         <EditProfilePopup
@@ -222,7 +282,7 @@ function App() {
         />
         <InfoTooltip
           isSuccess={isSuccess}
-          //isOpen={isInfoToolTip}
+          isOpen={isInfoToolTip}
           onClose={closeAllPopups}
           onClickOverlay={closePopupByOverley}
         />

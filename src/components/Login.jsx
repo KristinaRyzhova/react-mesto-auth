@@ -22,7 +22,7 @@ function Login ({onLogin}) {
   return (
     <div className='auth'>
       <h2 className='auth__title'>Вход</h2>
-      <form name='loginForm' id='loginForm' className='auth__form' onSubmit={handleSubmit}>
+      <form name='loginForm' className='auth__form' onSubmit={handleSubmit}>
         <div className='auth__input-fields'>
           <input
             className='auth__input' 

@@ -22,4 +22,4 @@ function InfoTooltip({ isOpen, onClose, onClickOverlay, isSuccess }) {
   )
 }
 
-export default InfoTooltip
+export default InfoTooltip;

@@ -20,11 +20,11 @@ function Register ({onRegister}) {
     evt.preventDefault();
     onRegister(email, password);
   };
-
+  
   return(
     <div className='auth'>
       <h2 className='auth__title'>Регистрация</h2>
-      <form name='registerForm' id='registerForm' className='auth__form' onSubmit={handleSubmit}>
+      <form name='registerForm' className='auth__form' onSubmit={handleSubmit}>
         <div className='auth__input-fields'>
           <input
             className='auth__input' 

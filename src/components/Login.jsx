@@ -6,14 +6,6 @@ function Login ({onLogin}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleTypeEmail(evt) {
-    setEmail(evt.target.value);
-  };
-
-  function handleTypePassword(evt) {
-    setPassword(evt.target.value);
-  };
-
   function handleSubmit(evt) {
     evt.preventDefault();
     onLogin(email, password);
@@ -32,7 +24,7 @@ function Login ({onLogin}) {
             value={email} 
             placeholder='Email' 
             required 
-            onChange={handleTypeEmail} 
+            onChange={({ target }) => setEmail(target.value)} 
           />
           <input
             className='auth__input' 
@@ -42,7 +34,7 @@ function Login ({onLogin}) {
             value={password} 
             placeholder='Пароль' 
             required 
-            onChange={handleTypePassword} 
+            onChange={({ target }) => setPassword(target.value)} 
           />
         </div>
         <button type="submit" className="auth__button">Войти</button>

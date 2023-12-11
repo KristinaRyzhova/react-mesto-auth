@@ -34,6 +34,7 @@
 @import url(./blocks/popup/popup.css);
 @import url(./blocks/popup/_opened/popup_opened.css);
 @import url(./blocks/popup/_overley/popup_overley.css);
+@import url(./blocks/popup/_overley-reg/popup_overley-reg.css);
 @import url(./blocks/popup/__container/popup__container.css);
 @import url(./blocks/popup/__close-button/popup__close-button.css);
 @import url(./blocks/popup/__title/popup__title.css);

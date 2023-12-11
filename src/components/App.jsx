@@ -40,27 +40,25 @@ function App() {
   }, []);
 
   const handleTokenCheck = () => {
-    if (localStorage.getItem('jwt')) {
-      const jwt = localStorage.getItem('jwt');
-      auth.checkToken(jwt).then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          navigate('/', { replace: true });
-          setUserEmail(res.data.email);
-        }
-        else {
-          setLoggedIn(false);
-          navigate('/sign-in', { replace: true })
-        }
-      });
-    }
+    const jwt = localStorage.getItem('jwt');
+    auth.checkToken(jwt).then((res) => {
+      if (res) {
+        setLoggedIn(true);
+        navigate('/');
+        setUserEmail(res.data.email);
+      }
+      else {
+        setLoggedIn(false);
+        navigate('/sign-in');
+      }
+    });
   };
 
   function handleRegister(email, password) {
     auth.register(email, password)
       .then((res) => {
         if (res) {
-          navigate('/sign-in', {replace: true});
+          navigate('/sign-in');
           setIsSuccess(true);
           setIsInfoToolTip(true);
         }
@@ -77,7 +75,7 @@ function App() {
       .then((data) => {
         setLoggedIn(true);
         setUserEmail(email);
-        navigate('/', {replace: true});
+        navigate('/');
         localStorage.setItem('jwt', data.token);
       })
       .catch(err => {
@@ -239,11 +237,11 @@ function App() {
             onCardLike={handleCardLike}
             onDeletePopup={handleDeleteCardClick}
             onDeletedCard={setDeletedCard}
-            cards={cards}
-            loggedIn={loggedIn}
+            cards={cards} 
+            loggedIn={loggedIn} 
             />} />
           <Route path="/sign-up" element={<Register onRegister={handleRegister}/>}/>
-          <Route path="/sign-in" loggedIn={loggedIn} element={<Login onLogin={handleLogin}/>}/>
+          <Route path="/sign-in" element={<Login onLogin={handleLogin}/>}/>
         </Routes>
         <Footer />
         <EditProfilePopup

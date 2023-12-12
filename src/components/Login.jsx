@@ -11,6 +11,14 @@ function Login ({onLogin}) {
     onLogin(email, password);
   };
 
+  function handleTypeEmail(evt) {
+    setEmail(evt.target.value);
+  }
+
+  function handleTypePassword(evt) {
+    setPassword(evt.target.value);
+  }
+
   return (
     <div className='auth'>
       <h2 className='auth__title'>Вход</h2>
@@ -24,7 +32,7 @@ function Login ({onLogin}) {
             value={email} 
             placeholder='Email' 
             required 
-            onChange={({ target }) => setEmail(target.value)} 
+            onChange={handleTypeEmail} 
           />
           <input
             className='auth__input' 
@@ -34,7 +42,7 @@ function Login ({onLogin}) {
             value={password} 
             placeholder='Пароль' 
             required 
-            onChange={({ target }) => setPassword(target.value)} 
+            onChange={handleTypePassword} 
           />
         </div>
         <button type="submit" className="auth__button">Войти</button>

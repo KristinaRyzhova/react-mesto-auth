@@ -25,34 +25,43 @@ function App() {
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [deletedCard, setDeletedCard] = useState(null);
   const [cards, setCards] = useState([]);
 
+  const [isLoadingUpdateAvatar, setIsLoadingUpdateAvatar] = useState(false);
+  const [isLoadingEditUser, setIsLoadingEditUser] = useState(false);
+  const [isLoadingAddCard, setIsLoadingAddCard] = useState(false);
+  const [isLoadingDeleteCard, setIsLoadingDeleteCard] = useState(false);
+
   const [loggedIn, setLoggedIn] = useState(false);
-  const [regSuccess, setRegSuccess] = useState(false);
+  const [isSuccessInfoTooltipStatus, setIsSuccessInfoTooltipStatus] = useState(false);
   const [infoToolTip, setInfoToolTip] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    handleTokenCheck(jwt);
+    handleTokenCheck();
   }, []);
 
   const handleTokenCheck = () => {
-    const jwt = localStorage.getItem('jwt');
-    auth.checkToken(jwt).then((res) => {
-      if (res.data) {
-        setLoggedIn(true);
-        navigate('/');
-        setUserEmail(res.data.email);
-      } else {
-        setLoggedIn(false);
-        navigate('/sign-in');
-      }
-    });
+    if (localStorage.getItem('jwt')) {
+      const jwt = localStorage.getItem('jwt');
+      auth.checkToken(jwt)
+        .then((res) => {
+          if (res.data) {
+            setLoggedIn(true);
+            navigate('/');
+            setUserEmail(res.data.email);
+          } else {
+            setLoggedIn(false);
+            navigate('/sign-in');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
   };
 
   const handleRegister = (email, password) => {
@@ -60,13 +69,13 @@ function App() {
       .then((res) => {
         if (res) {
           navigate('/sign-in');
-          setRegSuccess(true);
+          setIsSuccessInfoTooltipStatus(true);
           setInfoToolTip(true);
         }
       })
       .catch((err) => {
         console.log(err);
-        setRegSuccess(false);
+        setIsSuccessInfoTooltipStatus(false);
         setInfoToolTip(true);
       })
   };
@@ -81,7 +90,7 @@ function App() {
       })
       .catch(err => {
         console.log(err);
-        setRegSuccess(false);
+        setIsSuccessInfoTooltipStatus(false);
         setInfoToolTip(true);
       })
   };
@@ -89,18 +98,21 @@ function App() {
   const handleExit = () => {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
+    setUserEmail('');
   };
 
   useEffect(() => {
-    api.getAllInfo()
-      .then(([user, cards]) => {
-        setCurrentUser(user);
-        setCards(cards)
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-  }, []);
+    if (loggedIn) {
+      api.getAllInfo()
+        .then(([user, cards]) => {
+          setCurrentUser(user);
+          setCards(cards)
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+  }, [loggedIn]);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -154,7 +166,7 @@ function App() {
     }
   }, [isOpenPopup]);
 
-  function closePopupByOverley(evt) {
+  function closePopupByOverlay(evt) {
     if (evt.target === evt.currentTarget) {
       console.log("mouse");
       closeAllPopups();
@@ -172,7 +184,7 @@ function App() {
   };
 
   function handleCardDelete(card) {
-    setIsLoading(true);
+    setIsLoadingDeleteCard(true);
     api.removeCard(card._id)
       .then(() => {
         setCards((cards) => cards.filter((item) => item._id !== card._id));
@@ -181,11 +193,11 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsLoadingDeleteCard(false));
   };
 
-  function handleUpdateUser(data) {
-    setIsLoading(true);
+  function handleEditUser(data) {
+    setIsLoadingEditUser(true);
     api.editUserInfo(data)
       .then((user) => {
         setCurrentUser(user);
@@ -194,11 +206,11 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsLoadingEditUser(false));
   };
 
   function handleUpdateAvatar(data) {
-    setIsLoading(true)
+    setIsLoadingUpdateAvatar(true)
     api.editUserAvatar(data)
       .then((avatar) => {
         setCurrentUser(avatar);
@@ -207,11 +219,11 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsLoadingUpdateAvatar(false));
   };
 
   function handleAddPlaceSubmit(data) {
-    setIsLoading(true)
+    setIsLoadingAddCard(true)
     api.addNewCardPlace(data)
       .then((newCard) => {
         setCards([newCard, ...cards]);
@@ -220,7 +232,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsLoadingAddCard(false));
   };
 
   return (
@@ -248,42 +260,42 @@ function App() {
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser}
-          onLoading={isLoading}
-          onClickOverlay={closePopupByOverley}
+          onUpdateUser={handleEditUser}
+          onLoading={isLoadingEditUser}
+          onClickOverlay={closePopupByOverlay}
         />
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
-          onLoading={isLoading}
-          onClickOverlay={closePopupByOverley}
+          onLoading={isLoadingUpdateAvatar}
+          onClickOverlay={closePopupByOverlay}
         />
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlaceSubmit}
-          onLoading={isLoading}
-          onClickOverlay={closePopupByOverley}
+          onLoading={isLoadingAddCard}
+          onClickOverlay={closePopupByOverlay}
         />
         <DeleteCardPopup
           isOpen={isDeleteCardPopupOpen}
-          onLoading={isLoading}
+          onLoading={isLoadingDeleteCard}
           card={deletedCard}
           onCardDelete={handleCardDelete}
           onClose={closeAllPopups}
-          onClickOverlay={closePopupByOverley}
+          onClickOverlay={closePopupByOverlay}
         />
         <ImagePopup
           card={selectedCard}
           onClose={closeAllPopups}
-          onClickOverlay={closePopupByOverley}
+          onClickOverlay={closePopupByOverlay}
         />
         <InfoTooltip
-          regSuccess={regSuccess}
+          isSuccessInfoTooltipStatus={isSuccessInfoTooltipStatus}
           isOpen={infoToolTip}
           onClose={closeAllPopups}
-          onClickOverlay={closePopupByOverley}
+          onClickOverlay={closePopupByOverlay}
         />
       </div>
     </CurrentUserContext.Provider>

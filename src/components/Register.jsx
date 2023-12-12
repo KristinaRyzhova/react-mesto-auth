@@ -12,6 +12,14 @@ function Register ({onRegister}) {
     evt.preventDefault();
     onRegister(email, password);
   };
+
+  function handleTypeEmail(evt) {
+    setEmail(evt.target.value);
+  }
+
+  function handleTypePassword(evt) {
+    setPassword(evt.target.value);
+  }
   
   return(
     <div className='auth'>
@@ -26,7 +34,7 @@ function Register ({onRegister}) {
             value={email} 
             placeholder='Email' 
             required 
-            onChange={({ target }) => setEmail(target.value)} 
+            onChange={handleTypeEmail} 
           />
           <input
             className='auth__input' 
@@ -36,7 +44,7 @@ function Register ({onRegister}) {
             value={password} 
             placeholder='Пароль' 
             required 
-            onChange={({ target }) => setPassword(target.value)} 
+            onChange={handleTypePassword} 
           />
         </div>
         <button className='auth__button'>Зарегистрироваться</button>

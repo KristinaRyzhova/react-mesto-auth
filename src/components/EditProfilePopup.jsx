@@ -23,7 +23,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading, onClickOve
     setDescription(evt.target.value)
   };
 
-  function handleSumbitEditProfile(evt) {
+  function handleSubmitEditProfile(evt) {
     evt.preventDefault();
     onUpdateUser({
       name,
@@ -37,7 +37,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading, onClickOve
       title="Редактировать профиль"
       isOpen={isOpen} 
       onClose={onClose} 
-      onSubmit={handleSumbitEditProfile} 
+      onSubmit={handleSubmitEditProfile} 
       button={onLoading ? `Сохранение...` : `Сохранить`} 
       onClickOverlay={onClickOverlay} 
     >

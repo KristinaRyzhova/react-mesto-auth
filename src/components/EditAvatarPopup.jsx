@@ -5,7 +5,7 @@ import PopupWithForm from './PopupWithForm.jsx';
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onLoading, onClickOverlay }) {
   const avatarInputRef = useRef();
 
-  function handleSumbit(evt) {
+  function handleSubmit(evt) {
     evt.preventDefault();
     onUpdateAvatar({
       avatar: avatarInputRef.current.value,
@@ -23,7 +23,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onLoading, onClickOv
       button={onLoading ? `Обновление...` : `Обновить`} 
       isOpen={isOpen} 
       onClose={onClose} 
-      onSubmit={handleSumbit} 
+      onSubmit={handleSubmit} 
       onClickOverlay={onClickOverlay} 
     >
       <input 

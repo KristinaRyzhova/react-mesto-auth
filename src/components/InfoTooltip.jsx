@@ -2,7 +2,7 @@ import React from 'react';
 import successReg from '../images/sucsess.svg';
 import unsuccessReg from '../images/unsucsess.svg';
 
-function InfoTooltip({ isOpen, onClose, onClickOverlay, regSuccess }) {
+function InfoTooltip({ isOpen, onClose, onClickOverlay, isSuccessInfoTooltipStatus }) {
   return (
     <div 
       className={`popup popup_overley-reg ${isOpen ? "popup_opened" : ''}`} 
@@ -14,9 +14,9 @@ function InfoTooltip({ isOpen, onClose, onClickOverlay, regSuccess }) {
         <img
           className='popup__auth-image'
           alt='Уведомление о статусе регистрации'
-          src={`${regSuccess ? successReg : unsuccessReg}`}
+          src={isSuccessInfoTooltipStatus ? successReg : unsuccessReg} 
         />
-        <h2 className='popup__notification'>{`${regSuccess ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте ещё раз."}`}</h2>
+        <h2 className='popup__notification'>{`${isSuccessInfoTooltipStatus ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте ещё раз."}`}</h2>
       </div>
     </div>
   )

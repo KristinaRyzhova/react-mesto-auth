@@ -45,8 +45,8 @@ function App() {
   }, []);
 
   const handleTokenCheck = () => {
-    if (localStorage.getItem('jwt')) {
-      const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) { 
       auth.checkToken(jwt)
         .then((res) => {
           if (res.data) {
@@ -238,7 +238,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header email={userEmail} onClick={handleExit} />
+        <Header email={userEmail} onExit={handleExit} />
         <Routes>
           <Route path='/' element={<ProtectedRoute
             element={Main}

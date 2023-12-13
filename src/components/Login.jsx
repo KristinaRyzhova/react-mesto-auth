@@ -11,11 +11,11 @@ function Login ({onLogin}) {
     onLogin(email, password);
   };
 
-  function handleTypeEmail(evt) {
+  function handleEmailChange(evt) {
     setEmail(evt.target.value);
   }
 
-  function handleTypePassword(evt) {
+  function handlePasswordChange(evt) {
     setPassword(evt.target.value);
   }
 
@@ -32,7 +32,7 @@ function Login ({onLogin}) {
             value={email} 
             placeholder='Email' 
             required 
-            onChange={handleTypeEmail} 
+            onChange={handleEmailChange} 
           />
           <input
             className='auth__input' 
@@ -42,7 +42,7 @@ function Login ({onLogin}) {
             value={password} 
             placeholder='Пароль' 
             required 
-            onChange={handleTypePassword} 
+            onChange={handlePasswordChange} 
           />
         </div>
         <button type="submit" className="auth__button">Войти</button>

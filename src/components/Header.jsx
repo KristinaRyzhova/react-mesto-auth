@@ -1,7 +1,7 @@
 import Logo from '../images/Logo.svg';
 import { Link, Routes, Route } from 'react-router-dom';
 
-function Header({ email, onClick }) {
+function Header({ email, onExit }) {
   return (
     <>
       <header className="header">
@@ -12,7 +12,7 @@ function Header({ email, onClick }) {
             <Route path='/' element={
               <div className='header__auth-container'>
                 <p className='header__email'>{email}</p>
-                <Link to='/sign-in' className='header__exit' onClick={onClick}>Выйти</Link>
+                <Link to='/sign-in' className='header__exit' onExit={onExit}>Выйти</Link>
               </div>} />
           </Routes>
       </header>

@@ -10,5 +10,7 @@
   .profile__info {
     justify-content: center;
     align-items: flex-start;
+    margin-right: 0;
+    margin-left: 26.25px;
   }
 }

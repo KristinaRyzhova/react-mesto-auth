@@ -11,6 +11,6 @@
 @media screen and (min-width: 880px) {
   .profile__avatar {
     margin-left: 0;
-    margin-right: 26.25px;
+    margin-right: 0;
   }
 }
